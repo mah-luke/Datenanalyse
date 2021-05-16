@@ -70,9 +70,9 @@ data_monthly_total <- subset(data_monthly, grepl("^Total", Description))
 data_monthly <- subset(data_monthly, !grepl("^Total", Description))
 
 # TODO (optional): keep dates when converting to Date format
-data_yearly <- subset(data_cleaned, is.na(Date))
-data_yearly_total <- subset(data_yearly, grepl("^Total", Description))
-data_yearly <- subset(data_yearly, !grepl("^Total", Description))
+# data_yearly <- subset(data_cleaned, is.na(Date))
+# data_yearly_total <- subset(data_yearly, grepl("^Total", Description))
+# data_yearly <- subset(data_yearly, !grepl("^Total", Description))
 
 data_sources <- split(data_monthly, data_monthly$Source)
 
@@ -108,10 +108,10 @@ ggplot(wind, aes(Date, Energy)) +
 
 * __Einfluss der Spannweite (span):__
 Wie in der oberen Grafik zu erkennen ist, sorgt eine kleinere span für eine höhere Annäherung an die einzelnen Datenpunkte, wodurch es zu einer geringeren Glättung kommt.
-Bei höherer span kommt es zum gegenteiligen Effekt. Die Glättung ist sehr stark und bei diesem Datensatz kommt reicht ein Wert von 1 aus, dass die Glättung einer Linearfunktion ähnelt.
+Bei höherer span kommt es zum gegenteiligen Effekt. Die Glättung ist sehr stark und bei diesem Datensatz reicht ein Wert von 1 aus, dass die resultierende Lowess Funktion einer Linearfunktion ähnelt.
 
 * __Inhaltliche Interpretation der Trends:__
-Wie ersichtlich ist, folgt die Lowess Kurve mit der Spannweite 1 einem jährlichen Zyklus (ein lokales min / max pro Jahr), während die Lowess Kurve mit der Spannweite von 1
+Wie ersichtlich ist, folgt die Lowess Kurve mit der Spannweite `r spans[1, 1]` einem jährlichen Zyklus (ein lokales min / max pro Jahr), während die Lowess Kurve mit der Spannweite von `r spans[2, 1]`
 dem generellen Trend über mehrere Jahre relativ linear folgt. Je nachdem welches Modell erwünscht ist würde die Spannweite entsprechend gewählt werden.
 
 * __Nutzen von upper / lower smoothing:__
