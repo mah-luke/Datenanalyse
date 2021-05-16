@@ -90,7 +90,7 @@ wind <- subset(data_sources$"10", Date > as.Date("2005-01-01"))
 str(wind)
 
 ggplot(wind, aes(Date, Energy)) +
-    geom_point(size = 1, col = 2) +
+    geom_point(size = 1, aes(colour = month(Date))) +
     geom_line() +
     ggtitle("Energy production from wind beginning between 2005 and 2020") +
     ylab("Energy in Quadrillion Btu for each month")
@@ -111,11 +111,12 @@ Wie in der oberen Grafik zu erkennen ist, sorgt eine kleinere span für eine hö
 Bei höherer span kommt es zum gegenteiligen Effekt. Die Glättung ist sehr stark und bei diesem Datensatz reicht ein Wert von 1 aus, dass die resultierende Lowess Funktion einer Linearfunktion ähnelt.
 
 * __Inhaltliche Interpretation der Trends:__
-Wie ersichtlich ist, folgt die Lowess Kurve mit der Spannweite `r spans[1, 1]` einem jährlichen Zyklus (ein lokales min / max pro Jahr), während die Lowess Kurve mit der Spannweite von `r spans[2, 1]`
-dem generellen Trend über mehrere Jahre relativ linear folgt. Je nachdem welches Modell erwünscht ist würde die Spannweite entsprechend gewählt werden.
+Wie ersichtlich ist, folgt die Lowess Kurve mit der Spannweite `r spans[1, 1]` einem jährlichen Zyklus (ein lokales Minimum / Maximum pro Jahr), während die Lowess Kurve mit der Spannweite von `r spans[2, 1]`
+dem generellen Trend über mehrere Jahre relativ linear folgt. Je nachdem welches Modell erwünscht ist wird die Spannweite entsprechend gewählt.
 
 * __Nutzen von upper / lower smoothing:__
-
+Upper und Lower smoothing bietet zusätzlich zur Lowess Glättung Information bezüglich der Streuung. So wird ein Korridor (wie in der Abbildung ersichtlich) gezeichnet, in dem Kurve sehr wahrscheinlich bei 
+gegebener Datenlage liegt, vergleichbar mit einem Konfidenzintervall. Upper und Lower smoothing ist in der Abbildung bereits für beide Lowess Glättungen eingezeichnet (graue Bänder).
 
 # 2.Beispiel:
 
