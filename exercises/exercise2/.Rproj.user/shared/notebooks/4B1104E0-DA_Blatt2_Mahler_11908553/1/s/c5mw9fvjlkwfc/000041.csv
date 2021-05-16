@@ -1,0 +1,5 @@
+"0","table <- read.table(""MER_T01_02.csv"")
+"
+"2","Fehler in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,  : 
+  line 1 did not have 4 elements
+"

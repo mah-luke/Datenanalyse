@@ -1,0 +1,8 @@
+"0","# Data from:
+# https://www.eia.gov/totalenergy/data/browser/index.php?tbl=T01.02#
+# Primary Energy Production by Source in the USA
+electricity_raw <- fread(file = ""data/MER_T01_02.csv"", sep = "","")
+"
+"2","Fehler in fread(file = ""data/MER_T01_02.csv"", sep = "","") : 
+  File 'data/MER_T01_02.csv' does not exist or is non-readable. getwd()=='Z:/Benutzer/OneDrive - TU Wien/Uni/4.Semester/Datenanalyse/exercises/exercise2/working'
+"

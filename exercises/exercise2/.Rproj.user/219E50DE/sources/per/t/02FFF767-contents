@@ -1,0 +1,57 @@
+---
+title: "Datenanalyse"
+subtitle: "Abgabe 2"
+author: "Lukas Mahler (Matr. Nr. 11908553)"
+date: "01.04.2021"
+output: pdf_document
+---
+
+## Vorinformationen:
+Der Fließtext der Abgabe wurde in Deutscher Sprache verfasst, der R-Code selbst ist wie üblich in Englischer Sprache verfasst. 
+
+```{r}
+setwd("../") # set correct path
+
+```
+
+# 1. Beispiel
+
+Als Datensatz dient die Primärenergieproduktion der USA, abrufbar unter https://www.eia.gov/totalenergy/data/browser/index.php?tbl=T01.02#, aufgeschlüsselt nach Energiequelle.
+Nach Laden der Daten ergibt sich folgendes Bild:
+```{r}
+set.seed(69) # same seed for reproduceability
+library(data.table) # used for simplified reading into data frame
+library(ggplot2) # used for simplified plotting
+
+# Data from:
+# https://www.eia.gov/totalenergy/data/browser/index.php?tbl=T01.02#
+# Primary Energy Production by Source in the USA
+electricity_raw <- fread(file = "data/MER_T01_02.csv", sep = ",")
+str(electricity_raw) # view basic structure of the data
+
+plot(ts(electricity_raw$Value, start = c(1973, 1), frequency = 12),
+ main = "Raw data values in ts object",
+ ylab = "Energy production in Quadrillion Btu")
+```
+
+Wie aus den Daten klar ersichtlich ist, werden nun die unterschiedlichen Energiequellen in der Zeit hintereinander aufgereiht. 
+Nun wird das Dataframe in seine unterschiedlichen Energiequellen aufgeteilt und diese Teile werden dann als einzelne Zeitreihen behandelt.
+Auch kann man eine starke fluktuation in den Datenwerten feststellen. Diese kommt dadurch zustande, dass für jedes Jahr ein Monat 13 gespeichert wurde, 
+das die Insgesamt produzierte Energie pro Jahr angibt. Dieses dritte Monat muss zusätlich entfernt werden, da es die Daten ansonsten immer um ein Monat 
+pro Jahr verschiebt.
+
+```{r}
+electricity_raw[electricity_raw$YYYYMM > 197000]
+electricity_split <- split(electricity_raw, electricity_raw$MSN)
+
+plot(electricity_split$CLPRBUS$Value)
+electricity_split$CLPRBUS$Value
+coal <- electricity_split$CLPRBUS
+str(coal)
+ggplot(data = coal, aes(x = YYYYMM, y = Value)) +
+geom_point() +
+geom_line() +
+ggtitle("Energy produced via coal")
+```
+
+

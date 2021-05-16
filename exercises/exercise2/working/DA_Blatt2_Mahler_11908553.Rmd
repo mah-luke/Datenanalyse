@@ -1,0 +1,124 @@
+---
+title: "Datenanalyse"
+subtitle: "Abgabe 2"
+author: "Lukas Mahler (Matr. Nr. 11908553)"
+date: "01.04.2021"
+output: pdf_document
+---
+
+## Vorinformationen:
+Der Fließtext der Abgabe wurde in Deutscher Sprache verfasst, der R-Code selbst ist wie üblich in Englischer Sprache verfasst.
+Folgende Pakete werden zur einfacheren Bearbeitung und Dartstellung der Daten genutzt:
+* __data.table:__ Vereinfacht das Laden der Daten von einem "CSV" File in ein Dataframe.
+* __ggplot2:__ Erleichtert das Produzieren aussagekräftiger Plots.
+* __zoo:__ Genutzt, um das Datum, da kein Tag vorhanden ist, korrekt einzulesen.
+
+
+```{r, install-packages, warning = FALSE, message=FALSE}
+# install.packages("data.table")
+# install.packages("ggplot2")
+# install.packages("zoo")
+```
+
+# 1. Beispiel
+
+Als Datensatz dient die Primärenergieproduktion der USA, abrufbar unter https://www.eia.gov/totalenergy/data/browser/index.php?tbl=T01.02#, aufgeschlüsselt nach Energiequelle.
+Nach Laden der Daten ergibt sich folgendes Bild:
+```{r setup-loading}
+set.seed(69) # same seed for reproduceability
+library(data.table) # used for simplified reading into data frame
+library(ggplot2) # used for simplified plotting
+library(zoo) # for date reading
+
+# Data from:
+# https://www.eia.gov/totalenergy/data/browser/index.php?tbl=T01.02#
+# Primary Energy Production by Source in the USA
+setwd("Z:/Benutzer/OneDrive - TU Wien/Uni/4.Semester/Datenanalyse/exercises/exercise2")
+data_raw <- fread(
+    file = "data/MER_T01_02.csv", sep = ",",
+    col.names = c("MSN", "Date", "Energy", "Source", "Description"),
+    select = c(1, 2, 3, 4, 5),
+    colClasses = c(YYYYMM = "chr")
+)
+str(data_raw) # view basic structure of the data
+
+plot(ts(data_raw$Energy, start = c(1973, 1), frequency = 12),
+    main = "Raw data values in ts object",
+    ylab = "Energy production in Quadrillion Btu"
+)
+
+data_cleaned <- data_raw
+# Convert Value to num and set NA args
+data_cleaned$Energy <- type.convert(data_cleaned$Energy,
+    na.strings = c("Not Available")
+)
+# Convert into date format
+data_cleaned$Date <- as.Date(as.yearmon(data_cleaned$Date, "%Y%m"), frac = 1)
+str(data_cleaned)
+```
+
+Wie aus den Daten klar ersichtlich ist, werden nun die unterschiedlichen Energiequellen in der Zeit hintereinander aufgereiht. 
+Nun wird das Dataframe in seine unterschiedlichen Energiequellen aufgeteilt und diese Teile werden dann als einzelne Zeitreihen behandelt.
+Auch kann man eine starke fluktuation in den Datenwerten feststellen. Diese kommt dadurch zustande, dass für jedes Jahr ein Monat 13 gespeichert wurde, 
+das die Insgesamt produzierte Energie pro Jahr angibt. Dieses dritte Monat muss zusätlich entfernt werden, da es die Daten ansonsten immer um ein Monat 
+pro Jahr verschiebt.
+
+```{r extracting-data}
+# Remove all summaries for a year
+data_monthly <- subset(data_cleaned, !is.na(Date))
+data_monthly_total <- subset(data_monthly, grepl("^Total", Description))
+data_monthly <- subset(data_monthly, !grepl("^Total", Description))
+
+# TODO (optional): keep dates when converting to Date format
+data_yearly <- subset(data_cleaned, is.na(Date))
+data_yearly_total <- subset(data_yearly, grepl("^Total", Description))
+data_yearly <- subset(data_yearly, !grepl("^Total", Description))
+
+data_sources <- split(data_monthly, data_monthly$Source)
+
+ggplot(data = data_monthly,
+    aes(x = Date, y = Energy, group = MSN, colour = Description)) +
+    geom_line(size = 0.5) +
+    ggtitle("")
+```
+
+Nun sind die Daten aufbereitet, um als Timeseries Objekte eingelsesen und in Modelle verarbeitet zu werden.
+Für die weiteren Aufgaben werden wir die produzierte Energie durch Wind ab 2005 betrachten.
+
+```{r analyzing-data}
+wind <- subset(data_sources$"10", Date > as.Date("2005-01-01"))
+str(wind)
+
+ggplot(wind, aes(Date, Energy)) +
+    geom_point(size = 1, col = 2) +
+    geom_line() +
+    ggtitle("Energy production from wind beginning between 2005 and 2020") +
+    ylab("Energy in Quadrillion Btu for each month")
+
+spans <- data.frame(val = c(0.1, 1), col = c("red", "blue"))
+ggplot(wind, aes(Date, Energy)) +
+    geom_line() +
+    geom_smooth(method = "loess", span = spans[1, 1],
+        aes(col = as.character(spans[1, 1]))) +
+    geom_smooth(method = "loess", span = spans[2, 1],
+        aes(col = as.character(spans[2, 1]))) +
+    scale_colour_manual(name = "Spanwidth:", values = spans[, 2]) +
+    ggtitle("Loess functions for different span values")
+```
+
+* __Einfluss der Spannweite (span):__
+Wie in der oberen Grafik zu erkennen ist, sorgt eine kleinere span für eine höhere Annäherung an die einzelnen Datenpunkte, wodurch es zu einer geringeren Glättung kommt.
+Bei höherer span kommt es zum gegenteiligen Effekt. Die Glättung ist sehr stark und bei diesem Datensatz kommt reicht ein Wert von 1 aus, dass die Glättung einer Linearfunktion ähnelt.
+
+* __Inhaltliche Interpretation der Trends:__
+Wie ersichtlich ist, folgt die Lowess Kurve mit der Spannweite 1 einem jährlichen Zyklus (ein lokales min / max pro Jahr), während die Lowess Kurve mit der Spannweite von 1
+dem generellen Trend über mehrere Jahre relativ linear folgt. Je nachdem welches Modell erwünscht ist würde die Spannweite entsprechend gewählt werden.
+
+* __Nutzen von upper / lower smoothing:__
+
+
+# 2.Beispiel:
+
+# 3.Beispiel:
+
+# 4.Beispiel:

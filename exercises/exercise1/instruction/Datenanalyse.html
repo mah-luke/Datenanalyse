@@ -1,0 +1,182 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"><head>
+	<title>Datenanalyse</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="Datenanalyse-Dateien/instructions.css">
+</head>
+<body>
+	<div class="header framed">
+		<h1>1. EDV Übung</h1>
+		<h3 class="subtitle">aus 107.A03 Datenanalyse (SS2021)</h3>
+	</div>
+	<div class="framed">
+		<p><strong>Achtung: Diese Angabe ist für jeden Studenten/jede Studentin individuell generiert!</strong></p>
+		<h2>Hinweise</h2>
+		<p>
+			Die Abgabe muss zwingend mit Rmarkdown erstellt werden. Ein Template 
+(.Rmd File) ist in TUWEL verfügbar, gemeinsam mit dem resultierenden 
+.pdf File. Das Rmarkdown File kann in R-Studio geladen und mit dem Knopf
+ knitr ausgeführt werden. Allgemeine Anleitungen zu Rmarkdown sind 
+ebenfals in TUWEL verfügbar.
+		</p>
+		<h2>Vorbereitung</h2>
+		<p class="indent">
+			Installieren Sie R von <a href="http://www.r-project.org/">http://www.r-project.org</a> und eventuell RStudio von <a href="https://www.rstudio.com/">https://www.rstudio.com/</a>.
+			Installieren Sie ebenfalls das Zusatzpaket StatDA mit dem Befehl <code>install.packages("StatDA")</code>
+			(dazu müssen Sie mit dem Internet verbunden sein) und laden Sie das Paket mit <code>library(StatDA)</code>.
+		</p>
+		<p class="indent">
+			In dieser Übung verwenden wir Daten, die aus dem Kola Projekt stammen. Bei diesem Projekt
+			wurden Bodenproben, die an vielen Stellen der <a href="https://de.wikipedia.org/wiki/Kola">Kola Halbinsel</a>
+			genommen wurden, auf die Konzentration von bestimmten Elementen untersucht.
+			Die Bodenproben wurden dabei in 4 Bodenschichten (<em>moss</em>, <em>ohorizon</em>,
+			<em>bhorizon</em> und <em>chorizon</em>) geteilt. Die Werte jeder dieser
+			Schichten sind in einem eigenen Datensatz gespeichert. Diese Datensätze können mit den
+			Befehlen <code>data(moss)</code>, <code>data(ohorizon)</code>, usw. geladen werden.
+		</p>
+		<h2>Aufgabenstellungen</h2>
+		<h3 class="indent">1. Beispiel</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+					Erstellen Sie ein Histogramm (siehe <code>?hist</code>) der Variable <em>Pt</em>
+					aus der Bodenschicht <em>chorizon</em>.
+					Auf diese Variable können Sie mit dem <code>$</code>-Operator zugreifen (<code>chorizon$Pt</code>).
+					Was versteht man unter einem Histogramm? Ist es sinnvoll bzw. notwendig die Daten zu transformieren?
+				  Falls Sie eine Transformation durchgeführt haben, begründen sie weshalb.
+				</p>
+				<p>
+					Fügen Sie nun zu diesem Histogramm zwei weitere Histogramme für die (transformierten) Daten
+					hinzu und verwenden Sie	dabei einmal die Methode “Friedman-Diaconis” für die Anzahl der Balken
+					(auswählbar mittels Parameter <code>breaks="FD"</code>) bzw. einmal eine äquidistante
+					Klasseneinteilung in 5 Klassen (entspricht einer Klassen-Breite von 2).
+					Der Parameter <code>breaks</code> der <code>hist</code>-Funktion kontrolliert nur grob die Anzahl der Klassen.
+					Es kann notwendig sein, die Grenzen selbst mittels <code>seq</code> zu erzeugen.
+					Mit dem Befehl <code>par(mfrow = c(3, 1))</code> können Sie 3 Grafiken untereinander darstellen (siehe auch <code>?par</code>).
+					Erläutern Sie kurz die Unterschiede in den Klasseneinteilungen.
+					Welche Einteilung beschreibt am besten die Daten und weshalb?
+				</p>
+				<p>
+					Fügen Sie zwei Kerndichteschätzungen hinzu.
+					Die Kerndichteschätzung kann mit dem Befehl <code>density</code> errechnet werden. Berechnen Sie
+					die erste Kerndichteschätzung mit dem <em>gaussian</em> Kern und einmal mit dem
+					<em>cosine</em> Kern. Zeichnen Sie beide Kerndichteschätzungen mit dem Befehl
+					<code>lines</code> (<code>lines</code> zeichnet in einen bereits bestehenden Plot) Linien
+					in 2 unterschiedlichen Farben ein (siehe Parameter <code>col</code> des Befehls
+					<code>lines</code>). Eventuell ist es notwendig, den Anzeigebereich des Plots anzupassen (Parameter <code>ylim</code> und <code>xlim</code>).
+					Wie äußern sich die beiden unterschiedlichen Kerne der Dichteschätzung?
+					Welcher Kern ist für das konkrete Beispiel besser geeignet?
+				</p>
+			</div>
+		</div>
+		<h3 class="indent">2. Beispiel</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+				    Verwenden Sie für dieses Beispiel die Daten <code>Diamond</code> aus dem R-Paket <code>library(Ecdat)</code>.
+				</p>
+				<p>
+				    Erstellen Sie Boxplots mit Kerben für die Preise der Diamanten gruppiert nach der Variable
+				    <code>clarity</code>.
+				    Bedenken Sie, dass der Preis von schwereren Diamanten trivialerweise höher ist, weshalb das Gewicht
+				    (Variable <code>carat</code>) herausgerechnet werden muss. Dies könnte z.B. so gemacht werden, dass nicht
+				    die Variable <code>price</code>, sondern <code>price/carat</code> genommen wird – aber diese
+				    Lösung wird noch nicht optimal sein, und es sollten auch andere Ansätze versucht werden (Tipp: der normierte 
+				    Preis sollte nicht mehr von <code>carat</code> abhängen).
+				</p>
+				<h4>Fragestellungen:</h4>
+				<ul>
+				    <li>Was ist die Bedeutung der Box und der Kerben im Boxplot?</li>
+				    <li>Fallen bestimmte Gruppen als besonders teuer/billig auf?</li>
+				    <li>Unterscheiden sich die Mediane der einzelnen Gruppen signifikant (beachten Sie insbesondere die Kerben)?</li>
+				</ul>
+				<h4>R Hilfe:</h4>
+				<ul>
+				    <li>In R gibt es die Formelschreibweise, die hauptsächlich zur Beschreibung von Modellen verwendet
+				        wird. Dabei bezeichnet <code>y ~ x</code>, dass die Variable <code>y</code> durch <code>x</code>
+				        modelliert (d.h. beschrieben) wird. Eine ausführliche Beschreibung liefert <code>help(formula)</code></li>
+				    <li>Boxplots werden mit dem Befehl boxplot erzeugt, die Kerben können über den Paramter <code>notch</code>
+				        an-/abgeschalten werden.
+				        Beachten Sie, dass die Funktion boxplot mit Formeln umgehen kann. Z.B. liefert <code>boxplot(y ~ grp1, data =
+				            mydata)</code>
+				        eigene Boxplots der Daten y für jede Gruppe <code>grp1</code>, wobei diese Information im Objekt
+				        <code>mydata</code> ist.
+				    </li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">3. Beispiel</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+					Generieren Sie sich zuerst 100 Realisierungen zweier Zufallsgrößen die aus einer Binomialverteilung
+					mit Parameter <em>size = 94, prob = 0.2</em> bzw. einer Normalverteilung mit Parameter
+					<em>mean = -1, sd = 7.4</em> stammen. Dies funktioniert mit dem Befehl <code>x.desc &lt;- rbinom(100, size = 94, prob = 0.2)</code>
+					bzw. <code>x.cont &lt;- rnorm(100, mean = -1, sd = 7.4)</code>.
+					Zeichnen Sie nun die empirische Verteilungsfunktion (<code>?ecdf</code>)
+ der beiden Zufallsvektoren
+					mit unterschiedlichen Farben in eine Grafik. Falls die 
+Verteilungsfunktionen aufgrund von sehr unterschiedlichen numerischen
+					Bereiche nicht in einer Grafik vereinbar sind, erstellen Sie 
+separate Plots (begründen Sie dies jedoch in der Dokumentation).
+					Wie ist die empirische Verteilungsfunktion definiert?
+					Beschreiben Sie die Unterschiede, die Ihnen zwischen der diskret 
+und der kontinuierlich verteilten
+					Zufallsgröße auffallen.
+				</p>
+				<p>
+					Plotten Sie außerdem die empirische Verteilungsfunktion für die Variablen <em>Na</em>,
+					<em>As</em> und <em>Pb</em> aus der Schicht <em>ohorizon</em> (falls sinnvoll,
+					sollten Sie die Daten zuerst transformieren). Interpretieren Sie die Ergebnisse und Unterschiede
+					der empirischen Verteilungsfunktionen.
+				</p>
+			</div>
+		</div>
+		<h3 class="indent">4. Beispiel</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+					Ziehen Sie zufällig 500 Werte aus einer Normalverteilung mit Mittelwert -8 und Standardabweichung
+					2.06 (<code>x &lt;- rnorm(500, -8, 2.06)</code>).
+					Erstellen Sie für die generierten Werte mit der Funktion <code>qqplot.das</code> einen QQ-Plot.
+					Sind die Parameter der zugrunde liegenden Normalverteilung im Plot ersichtlich und wenn ja, wie?
+					Hierfür kann die Funktion <code>grid</code> hilfreich sein, welche bei einem bereits bestehenden Plot ein Gitter im Hintergrund einblendet.
+				</p>
+				<p>
+					Stellen Sie nun den QQ-Plot der 3 (evtl. transformierten) Variablen aus Beispiel 3 dar. Der QQ-Plot
+					der ersten Variable kann wieder mit <code>qqplot.das</code> erzeugt werden. Die weiteren Variablen
+					sollen im selben Plot mit anderer Farbe aufscheinen (kann mit dem Parameter <code>add.plot</code>
+					der Funktion <code>qqplot.das</code> erzielt werden).
+					Passen Sie eventuell wieder die Bereiche des Plots mit den Parametern <code>xlim</code> und <code>ylim</code>
+ an.
+					Falls die Daten trotz Anpassung der Bereiche nicht in einen Plot 
+passen, erstellen sie separate Plots (mit Begründung in der 
+Dokumentation).
+					Lassen sich im QQ-Plot Strukturen in den Daten
+					erkennen und unterstützen die QQ-Plots ihre Schlüsse in Beispiel 3?
+				</p>
+			</div>
+		</div>
+		<h2>Abgabe</h2>
+		<p class="indent">
+			Die Abgabe erfolgt schriftlich als PDF oder <strong>HTML direkt aus knitr</strong> über TUWEL bis spätestens <strong>Deadline siehe TUWEL</strong> hochzuladen.
+		</p>
+		<h5 class="indent">Die Abgabe soll in übersichtlicher Form folgendes beinhalten:</h5>
+		<ul class="upload-desc indent">
+			<li>die Grafiken (in hinreichender Größe)</li>
+			<li>die Beantwortung der Fragen</li>
+			<li>Beschriftung der Achsen der Graphen</li>
+			<li>eventuell getroffene Annahmen und notwendige Begründungen</li>
+			<li>die <strong>erfolgreichen</strong> R Befehle</li>
+		</ul>
+	</div>
+	<ul id="footer">
+		<li class="first">Technische Universität Wien</li>
+		<li>Institut für Stochastik und Wirtschaftsmathematik</li>
+		<li>1040 Wien, Wiedner Hauptstr. 8-10</li>
+		<li>AUSTRIA</li>
+	</ul>
+
+
+</body></html>

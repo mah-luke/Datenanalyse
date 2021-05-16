@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+	<title>Data Analysis</title>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" href="instructions.css" />
+</head>
+<body>
+	<div class="header framed">
+		<h1>Second Exercise</h1>
+		<h3 class="subtitle">107.A03 Data Analysis (SS21)</h3>
+	</div>
+	<div class="framed">
+		<p><strong>Attention: These assignments are generated individually for every student!</strong></p>
+		<h2>Hints</h2>
+		<p> 
+            The tasks and documentations need to be done with Rmarkdown. A template (.Rmd file) is available in TUWEL, 
+            together with the resulting .pdf file. You can load the Rmarkdown file in RStudio, and execute it with 
+            the button knitr. General instructions to Rmarkdown are also available in TUWEL.
+		</p>
+		<h2>Tasks</h2>
+		<h3 class="indent">Example 1</h3>
+		<div class="indent">
+			<div class="problem1 indent">
+				<p>
+					Visit the web page
+<a href="https://robjhyndman.com/hyndsight/time-series-data-in-r/"> https://robjhyndman.com/hyndsight/time-series-data-in-r/ </a>.
+There are several R packages listed which contain time series data. After installation of the package you can list 
+all data sets available in the package with
+<code>data(package="packagename")</code>. Select one data set which contains monthly time series
+(take a potentially different data set as your colleagues).
+Alternatively, you can select a data set from the internet, save the data e.g. in csv format, and
+read the data into R with <code>read.csv()</code>. The resulting object
+(e.g. "obj") then should be converted to a time series object by using 
+<code>ts.obj &lt;- ts(obj,start=...,frequency=12) </code> - 
+for <code>start</code> your need to provide the start date of the series.
+If you do not have monthly values you need to set 
+<code>frequency</code> to an appropriate value.
+</p>
+<p>
+Visualize the time series in a plot. Make sure that meaningful axis labels are provided.
+Add to this plot two smoothed curves in different color by using 
+<code>LOWESS</code>. For this purpose, use the command <code>loess</code>, and select a small respectively bigger
+value for the parameter <code>span</code>. Plot for one of these estimations the line with the smoothed residuals
+("upper und lower smoothing") in the same color, but with a different line type.
+				</p>
+				<h4>Questions:</h4>
+				<ul>
+					<li>How is the parameter <code>span</code> affecting the <em>LOWESS</em> estimation internally?</li>
+					<li>How can you interpret the trend estimated by <em>LOWESS</em> in the context of your time series?</li>
+					<li>What is the purpose of upper and lower smoothing?</li>
+				</ul>
+				<h4>R help:</h4>
+				<ul>
+					<li><code>loess</code> cannot be directly applied to time series objects <code>ts.obj</code>. You need to define another object
+					  (e.g. <code>tm</code>) contaning the time points to your time series data (command <code>seq()</code> can
+					  be helpful). LOWESS is then used as follows:
+					  <code>res &lt;- loess(ts.obj ~ tm, span=...)</code>
+					  with a corresponding choice for <code>span</code>.</li>
+					<li>The smoothed values are obtained by
+					  <code>pred &lt;- predict(res,tm)</code>,
+					  and they can be added with <code>lines()</code> to the plot.</li>
+					<li>In the command <code>plot()</code> or <code>lines()</code> you can change the color with the parameter <code>col</code>,
+					and the line type with <code>lty</code>.</li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">Example 2</h3>
+		<div class="indent">
+			<div class="problem2 indent">
+				<p>
+					Take the same data set as in Example 1 and apply robust filtering. For this purpose, use from the package 
+                    <code>robfilter</code> the function <code>robust.filter()</code>, and select an appropriate value for the
+                    parameter <code>width</code>. Visualize the time series together with the smoothed signal.
+                    Did the algorithm identify outliers? If so, indicate them in the plot.
+				</p>
+				<h4>Questions:</h4>
+				<ul>
+					<li><code>robust.filter()</code> internally estimates local means and standard deviations. Which estimators
+					are used for this purpose?</li>
+					<li>What is the concept for the outlier identification?</li>
+					<li>Is it possible to interpret the outliers in the context of your time series?</li>
+				</ul>
+				<h4>R help: see course notes</h4>
+				
+			</div>
+		</div>
+		<h3 class="indent">Example 3</h3>
+		<div class="indent">
+			<div class="problem3 indent">
+				<p>Take the same data as in Example 1. Estimate and plot the trend component, the seasonal component, 
+				and the remainder (residual component).</p>
+        <p>
+        Now split the data into two consecutive time intervals, where the second interval should contain about 1-4 years
+        (depending on the length of your time series). The first interval will be used to estimate a model, and 
+        the second interval is used for prediction, which then can be compared to the data. For this purpose,
+        visualize the first part of your time series with <code>plot()</code>, but enlarge the x-range in order to
+        add a line for the second part later on.</p>
+        <p>
+        Compute now for the first part the Holt-Winters estimator. Add the resulting smoothed values to the plot
+        in different color. Use the resulting model to predict the remaining values and show the predictions
+        in the plot by using a bright color.
+        </p>
+				<h4>Questions:</h4>
+				<ul>
+					<li>Does your time series show seasonality and a trend? How can they be interpreted?
+					Does the remainder correspond to <em>white noise?</em></li><li>
+					Is the estimation (prediction) by Holt-Winters useful for this data set?</li>
+				</ul>
+				<h4>R help:</h4>
+				<ul>
+					<li>The plot of the trend, seasonal and residual component is obtained by 
+  <code>plot(stl(ts.obj, s.window = "per"))</code>.</li><li>
+With the command <code>window</code> you can select a subset (range) of the time series. You need to use the 
+  parameter <code>start</code> and <code>end</code>. If only <code>start</code> or only <code>end</code> are used, 
+  the whole range from <code>start</code> to the end of the series, or from the start to the time point <code>end</code>
+  are extracted. </li><li>
+The range of the x-axis can be extended with the parameter <code>xlim</code>.
+Holt-Winters estimation can be done with 
+  <code>hw &lt;- HoltWinters(ts.obj1)</code>, where the object <code>ts.obj1</code> represents the first interval of the time series.</li><li>
+The smoothed values are stored in the Holt-Winters object <code>hw$fitted[, 1]</code>.</li><li>
+Prediction can be done with the command <code>predict(hw, n.ahead = 48)</code>, here for 48 months.</li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">Example 4</h3>
+		<div class="indent">
+			<div class="problem2 indent">
+				<p>
+					Load the data set <code>Animals2</code> from the package <code>library(robustbase)</code> and
+					take the logarithm of these data.
+				</p>
+				<p>
+					Plot the brain weight against the body weight. Add the least-squares line,
+					the Theil line, and the LTS line, by using different colors.
+					Finally, show 2 plots with the estimated 2-dimensional densities. The first plot
+					should be a 3D visualization of the density 
+					(command <code>persp</code>) - try to get an informative perspective, 
+					and the second plot should be done with the command <code>contour</code>
+					(applied to the density estimate).
+				</p>
+				<h4>Questions:</h4>
+				<ul>
+					<li>Which of the estimated regression lines is most suitable for this data sets (provide arguments!)</li>
+					<li>Briefly describe how this most suitable line is computed.</li>
+				</ul>
+				<h4>R help:</h4>
+				<ul>
+					<li>The least-squares line can be computed with the command <code>lm</code>.</li>
+					<li>Depending on the assigned task: The function <code>mblm</code> is available in the package (<code>install.packages("mblm")</code>).</li>
+					<li>The Theil line can be computed with the command <code>mblm(..., repeated=FALSE)</code>.</li>
+					<li>The LTS line can be computed with the command <code>ltsReg from the package robustbase</code>.</li>
+					<li>The computed regression lines can be added to the plot with the command <code>abline</code> .</li>
+					<li>A 2-dimensional density can be estimated with the command <code>kde2d</code> from the package <code>MASS</code>.
+					The commands <code>persp</code> and <code>contour</code> can be directly applied to the result object of the estimated density.
+					The perspective can be changed with the parameters <code>theta</code>, <code>phi</code> and <code>r</code>.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+       <ul id="footer">
+                <li class="first">TU Wien</li>
+                <li>Institute of Statistics and Mathematical Methods in Econimics</li>
+                <li>1040 Wien, Wiedner Hauptstr. 8-10</li>
+                <li>AUSTRIA</li>
+        </ul>
+</body>
+</html>

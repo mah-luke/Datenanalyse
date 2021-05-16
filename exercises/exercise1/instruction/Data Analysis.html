@@ -1,0 +1,180 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"><head>
+	<title>Data Analysis</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="Data%20Analysis-Dateien/instructions.css">
+</head>
+<body>
+	<div class="header framed">
+		<h1>First Exercise</h1>
+		<h3 class="subtitle">107.A03 Data Analysis (SS2021)</h3>
+	</div>
+	<div class="framed">
+		<p><strong>Attention: These assignments are generated individually for every student!</strong></p>
+		<h2>Hints</h2>
+		<p>
+			The tasks and documentations need to be done with Rmarkdown. A 
+template (.Rmd file) is available in TUWEL, together with the resulting 
+.pdf file. You can load the Rmarkdown file in RStudio, and execute it 
+with the button knitr. General instructions to Rmarkdown are also 
+available in TUWEL.
+		</p>
+		<h2>Preparation</h2>
+		<p class="indent">
+			Install R from <a href="http://www.r-project.org/">http://www.r-project.org</a> and preferably also RStudio from <a href="https://www.rstudio.com/">https://www.rstudio.com/</a>.
+			Install the add-on package StatDA with the command <code>install.packages("StatDA")</code>
+			(you need to be connected to the internet) and load this package with <code>library(StatDA)</code>.
+		</p>
+		<p class="indent">
+			In this exercise we use data from the Kola project. Within this 
+project, soil samples have been collected at several places of the 
+			<a href="https://de.wikipedia.org/wiki/Kola">Peninsula Kola</a>
+			and they were investigated for the concentrations of a number of chemical elements.
+			The soil samples have been distinguished in 4 soil layers (<em>moss</em>, <em>ohorizon</em>,
+			<em>bhorizon</em> und <em>chorizon</em>). The data from each layer are
+			available in separate data sets. These data sets can be loaded with
+			the commands <code>data(moss)</code>, <code>data(ohorizon)</code>, etc.
+		</p>
+		<h2>Tasks</h2>
+		<h3 class="indent">Example 1</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+					Show a histogram (siehe <code>?hist</code>) of the variable <em>Pt</em>
+					from the soil layer <em>chorizon</em>.
+					You can get access to this variable with the <code>$</code>-operator (<code>chorizon$Pt</code>).
+					What is a histogram? Does it make sense or is it even necessary to first transform the variable?
+				    In case you have done a transformation, explain why.
+				</p>
+				<p>
+					Add to this histogram two further histograms for the (transformed) data, but this time use the
+					method “Friedman-Diaconis” for the number of histogram bins
+					(to select with the parameter <code>breaks="FD"</code>), and once equidistant 
+					classes with 5 classes (corresponding to a bin width of 2).
+					The parameter <code>breaks</code> of the function <code>hist</code> only allows to roughly control the number of classes.
+					It can be necessary to use your own generation of the interval boundaries using <code>seq</code>.
+					With the command <code>par(mfrow = c(3, 1))</code> you can place 3 plots on top of each other (see also <code>?par</code>).
+					Explain briefly the differences in the histogram class assignments.
+					Which class assignment describes you data best, and why?
+				</p>
+				<p>
+					Add two kernel density estimates to the histograms.
+					The kernel density estimation can be computed with the command <code>density</code>. Compute the
+					first kernel density estimation with the <em>gaussian</em> kernel, and the second one with a 
+					<em>cosine</em> kernel. Draw both kernel density estimates as lines with the command
+					<code>lines</code> (<code>lines</code> draws into an existing plot)
+					by using two different colors (see parameter <code>col</code> of the command
+					<code>lines</code>). It might be necessary to adjust the plot window (parameter <code>ylim</code> and <code>xlim</code>).
+					How appropriate are the two different kernels for the estimation?
+					Which of these kernel is better suited for this task?
+				</p>
+			</div>
+		</div>
+		<h3 class="indent">Example 2</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+				    Use for this example the data <code>Diamond</code> from the R package <code>library(Ecdat)</code>.
+				</p>
+				<p>
+				    Draw boxplots with notches for the prices of the diamonds grouped by variable
+				    <code>clarity</code>.
+				    Note that the price is trivially higher for heavier diamonds, and thus the weight
+				    (variable <code>carat</code>) needs to be subtracted out. This could be done by considering
+				    <code>price/carat</code> instead of <code>price</code>, but this solution might still not be optimal,
+				    and thus other approaches should be tested as well.
+				    (Hint: the normalized price should not show a dependency from the variable <code>carat</code>).
+				</p>
+				<h4>Questions:</h4>
+				<ul>
+				    <li>What is the meaning of the box and of the notches in the boxplot?</li>
+				    <li>Can you recognize certain groups as being especially cheap/expensive?</li>
+				    <li>Are the medians of the groups significantly different from each other (look at the notches)?</li>
+				</ul>
+				<h4>R help:</h4>
+				<ul>
+				    <li>R allows for the use of formulas which are mainly for the purpose of describing models.
+				        For example, <code>y ~ x</code> means that variable <code>y</code> is modeled (or described) by variable <code>x</code>.
+				        More explanations can be found in <code>help(formula)</code></li>
+				    <li>Boxplots are drawn with the command boxplot, and the notches can be shown with the paramter <code>notch</code>.
+				        Note that the function boxplot can work with formulas. E.g., <code>boxplot(y ~ grp1, data =
+				            mydata)</code>
+				        creates extra boxplots of y for each group <code>grp1</code>, and this information needs to be available in the object
+				        <code>mydata</code>.
+				    </li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">Example 3</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+					Generate 100 realizations of a random variable with distribution Binomialverteilung
+					and parameters <em>size = 94, prob = 0.2</em> and from a distribution Normalverteilung with parameters
+					<em>mean = -1, sd = 7.4</em>. This can be done with the command <code>x.desc &lt;- rbinom(100, size = 94, prob = 0.2)</code>
+					and <code>x.cont &lt;- rnorm(100, mean = -1, sd = 7.4)</code>.
+					Now draw the empirical distribution function (<code>?ecdf</code>) 
+of both random vectors
+					using different colors into one plot. Draw two separate plots if 
+the scale of the empirical distribution functions is very different and 
+thus they cannot
+					be combined into one plot (explain this in the documentation).
+					How is the empirical distribution function defined? Describe the 
+differences that you see in the 
+					discrete and continuous random variable.
+				</p>
+				<p>
+					Plot also the empirical distribution functions of the Kola project variables <em>Na</em>,
+					<em>As</em> and <em>Pb</em> from the layer <em>ohorizon</em> (if necessary,
+					the data should first be transformed). Interpret the results and the differences 
+					in teh empirical distribution functions.
+				</p>
+			</div>
+		</div>
+		<h3 class="indent">Example 4</h3>
+		<div class="indent">
+			<div class="problem indent">
+				<p>
+					Draw randomly 500 values from a normal distribution with mean -8 and standard deviation
+					2.06 (<code>x &lt;- rnorm(500, -8, 2.06)</code>).
+					Use the function <code>qqplot.das</code> to show a QQ-plot with the generated values.
+					Are the parameters of the underlying normal distribution visible in the plot, and if so, how?
+					For this task, the function <code>grid</code> could be heplful, since it shows a grid in an existing plot.
+				</p>
+				<p>
+					Now show a QQ-plot of the 3 (possibly transformed) variables from Example 3. The QQ-plot
+					of the first variable can be generated with <code>qqplot.das</code>. The remaining variables
+					should appear in the same plot but with different colors (can be done with the parameter <code>add.plot</code>
+					in the function <code>qqplot.das</code>).
+					if necessary, adjust the plotting regions with the parameters <code>xlim</code> and <code>ylim</code>.
+					Show the graphs in separate plots if the data do not fit into one 
+plot (even when adjusting the plot), and provide a reasoning for that in
+ the documentation.
+					Can you see specific patterns of the data in the QQ-plot?
+					Do the QQ-plots support your conclusions from Example 3?
+				</p>
+			</div>
+		</div>
+		<h2>Submission</h2>
+		<p class="indent">
+			The solutions need to be uploaded as a PDF or <strong>HTML generated directly from knitr</strong> via TUWEL until <strong>Deadline see TUWEL</strong> at latest.
+		</p>
+		<h5 class="indent">The solutions should be clearly structured, and contain the following:</h5>
+		<ul class="upload-desc indent">
+			<li>all graphs (plots) (in sufficient size)</li>
+			<li>all answers to the questions</li>
+			<li>axis labels at the plots</li>
+			<li>possibly used assumptions and corresponding justifications</li>
+			<li>the <strong>successful</strong> R commands</li>
+		</ul>
+	</div>
+	<ul id="footer">
+		<li class="first">TU Wien</li>
+		<li>Institute of Statistics and Mathematical Methods in Econimics</li>
+		<li>1040 Wien, Wiedner Hauptstr. 8-10</li>
+		<li>AUSTRIA</li>
+	</ul>
+
+
+</body></html>

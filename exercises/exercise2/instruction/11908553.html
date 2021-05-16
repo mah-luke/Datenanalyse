@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+	<title>Datenanalyse</title>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" href="instructions.css" />
+</head>
+<body>
+	<div class="header framed">
+		<h1>2. EDV Übung</h1>
+		<h3 class="subtitle">aus 107.A03 Datenanalyse (SS21)</h3>
+	</div>
+	<div class="framed">
+		<p><strong>Achtung: Diese Angabe ist für jeden Studenten/jede Studentin individuell generiert!</strong></p>
+		<h2>Hinweise</h2>
+		<p>
+			Die Abgabe muss zwingend mit Rmarkdown erstellt werden. Ein Template (.Rmd File) ist in TUWEL verfügbar, gemeinsam mit dem resultierenden .pdf File. Das Rmarkdown File kann in R-Studio geladen und mit dem Knopf knitr ausgeführt werden. Allgemeine Anleitungen zu Rmarkdown sind ebenfals in TUWEL verfügbar.
+		</p>
+		<h2>Aufgabenstellungen</h2>
+		<h3 class="indent">1. Beispiel</h3>
+		<div class="indent">
+			<div class="problem1 indent">
+				<p>
+					Gehen sie zur Seite
+<a href="https://robjhyndman.com/hyndsight/time-series-data-in-r/"> https://robjhyndman.com/hyndsight/time-series-data-in-r/ </a>.
+Hier werden einige R Pakete gelistet, die Zeitreihendaten beinhalten. Nach Installation eines Paketes kann man mit
+<code>data(package="packagename")</code> sehen, welche Daten in dem Paket vorhanden sind. Wählen sie einen Datensatz aus, 
+bei dem monatliche Zeitreihen vorliegen (nehmen sie
+potentiell einen anderen Datensatz als ihre Kolleginnen und Kollegen). 
+Sie können alternativ auch einen Datensatz aus dem Internet wählen, diesen z.B. als csv-Datei speichern, 
+und mit <code>read.csv()</code> in R einlesen. Das resultierende
+Objekt (z.B. "obj") soll dann als Zeitreihen-Objekt dargestellt werden, was mit dem Befehl
+<code>ts.obj &lt;- ts(obj,start=...,frequency=12) </code>
+geschieht - für <code>start</code> muss der Beginn der Zeitreihe angegeben werden.
+Falls sie keine monatlichen Werte haben, müsste <code>frequency</code> entsprechend geändert werden.
+</p>
+<p>
+Stellen sie die Zeitreihe grafisch dar. Achten sie dabei auf eine korrekte Achsenbeschriftung.
+In diese Grafik sollen nun zwei mit <code>LOWESS</code> geglättete Kurven mit unterschiedlicher Farbe
+eingezeichnet werden. Verwenden sie dazu den Befehl <code>loess</code> und wählen sie einen kleinen und
+einen großen Wert für den Parameter <code>span</code>. Zeichnen sie für eine der Schätzungen die Glättung
+der Residuen ("upper und lower smoothing") in der gleichen Farbe, aber mit anderem Strichtyp
+ein.
+				</p>
+				<h4>Fragestellungen:</h4>
+				<ul>
+					<li>Wie fließt die Spannweite in die <em>LOWESS</em> Schätzung ein?</li>
+					<li>Wie kann der mit <em>LOWESS</em> ermittelte Trend inhaltlich interpretiert werden?</li>
+					<li>Wozu dient upper bzw. lower smoothing?</li>
+				</ul>
+				<h4>R Hilfe:</h4>
+				<ul>
+					<li><code>loess</code> kann nicht direkt auf <code>ts.obj</code> angewendet werden, sondern es muss noch ein Objekt
+					  (z.B. tm) erstellt werden, das die Zeitpunkte zu den Messungen enthält (Befehl <code>seq()</code> kann
+					  hilfreich sein). LOWESS wird dann so angewendet:
+					  <code>res &lt;- loess(ts.obj ~ tm, span=...)</code>
+					  mit einer entsprechenden Wahl für <code>span</code>.</li>
+					<li>Die geglätteten Werte erhält man mit
+					  <code>pred &lt;- predict(res,tm)</code>
+					  die man dann mit <code>lines()</code> in die Grafik hinzufügen kann.</li>
+					<li>Bei <code>plot()</code> oder <code>lines()</code> kann man mit dem Parameter <code>col</code> die Farbe ändern, mit <code>lty</code> den Linientyp.</li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">2. Beispiel</h3>
+		<div class="indent">
+			<div class="problem2 indent">
+				<p>
+					Nehmen sie die gleichen Daten wie in Beispiel 1 und wenden sie robustes Filtern an. Nehmen sie
+dazu aus dem Paket <code>robfilter</code> die Funktion <code>robust.filter()</code>, und wählen sie einen geeigneten
+Parameter für <code>width</code>. Visualisieren sie die Zeitreihe gemeinsam mit der geglätteten Zeitreihe.
+Werden Ausreißer erkannt? Wenn ja, zeichnen sie die Ausreißer in der Grafik ein.
+				</p>
+				<h4>Fragestellungen:</h4>
+				<ul>
+					<li><code>robust.filter()</code> berechnet intern lokale Mittel und Streuungen. Welche Schätzer werden hierfür
+					  verwendet?</li>
+					<li>Nach welchem Prinzip werden Ausreißer ermittelt?</li>
+					<li>Können die Ausreißer inhaltlich interpretiert werden?</li>
+				</ul>
+				<h4>R Hilfe: siehe Skriptum</h4>
+				
+			</div>
+		</div>
+		<h3 class="indent">3. Beispiel</h3>
+		<div class="indent">
+			<div class="problem3 indent">
+				<p>Nehmen sie die gleichen Daten wie in Beispiel 1. Erstellen sie zunächst einen Plot der Trend-,
+Saison- und Restkomponenten.</p>
+<p>
+Unterteilen sie nun die Daten in zwei aufeinanderfolgende Zeitbereiche, wobei der letzte Bereich
+etwa 1-4 Jahre sein soll (je nachdem, wie lang ihre Zeitreihe ist). Der erste Bereich wird dazu
+dienen, ein Modell zu schätzen, und mit dem zweiten Bereich kann mit dem Modell eine Prognose
+erstellt werden, die dann mit den gemessenen Daten verglichen werden kann. Dazu müssen sie
+den ersten Bereich mittels <code>plot()</code> zeichnen, den Bereich der x-Achse vergrößern, und danach mit
+lines den zweiten Bereich einzeichnen.
+</p><p>
+Berechnen sie nun anhand des ersten Bereiches eine Holt-Winters Schätzung für die Parameter.
+Zeichnen sie die erhaltenen geglätteten Werte in die Grafik mit anderer Farbe ein. Verwenden
+sie das berechnete Modell zur Prognose der restlichen Werte, und zeichnen sie die prognostizierten
+Werte mit einer auffallenden Farbe zusätzlich in die Grafik ein.</p>
+				<h4>Fragestellungen:</h4>
+				<ul>
+					<li>Sind in der Zeitreihe saisonale Schwankungen und ein Trend erkennbar? Wie sind diese zu
+					interpretieren? Ist die Restkomponente nur noch <em>white noise?</em></li><li>
+					Funktioniert Prognose mit Holt-Winters hier zufriedenstellend?</li>
+				</ul>
+				<h4>R Hilfe:</h4>
+				<ul>
+					<li>Der Plot der Trend-, Saison- und Restkomponente kann mit dem Befehl 
+  <code>plot(stl(ts.obj, s.window = "per"))</code>
+  erstellt werden.</li><li>
+Mit dem Befehl <code>window</code> kann ein Bereich aus einer Zeitreihe extrahiert werden. Dazu gibt es die 
+  Parameter <code>start</code> bzw. end. Wird nur <code>start</code> bzw. end angegeben, wird der gesamte Bereich
+  von <code>start</code> bis zum Ende der Zeitreihe bzw. vom Anfang der Zeitreihe bis zum Zeitpunkt <code>end</code>
+  extrahiert. </li><li>
+Der Bereich der x-Achse kann mit dem Paramter xlim erweitert werden.
+Die Schätzung für die Parameter einer Glättung nach Holt-Winters kann mit dem Befehl 
+  <code>hw &lt;- HoltWinters(ts.obj1)</code> berechnet werden, wobei das Objekt <code>ts.obj1</code> den ersten Bereich der Zeitreihe darstellt.</li><li>
+Die geglätteten Werte sind im Holt-Winters-Objekt unter <code>hw$fitted[, 1]</code> abgespeichert.</li><li>
+Die Prognose wird mit dem Befehl <code>predict(hw, n.ahead = 48)</code> berechnet, hier für 48 Monate.</li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">4. Beispiel</h3>
+		<div class="indent">
+			<div class="problem2 indent">
+				<p>
+					Laden sie nun die Daten <code>Animals2</code> aus dem Paket <code>library(robustbase)</code> und
+					logarithmieren sie die Daten.
+				</p>
+				<p>
+					Zeichnen sie nun das Gehirngewicht gegen das Körpergewicht in eine Grafik. Zeichnen sie die
+					übliche kleinste Quadrate Regressionsgerade sowie die Gerade nach Theil und die LTS Gerade, in
+					jeweils unterschiedlicher Farbe ein. Erstellen sie abschließend noch 2 Grafiken der geschätzten
+					2-dimensionalen Dichte der Daten. Die erste Grafik soll die 3D Darstellung der Dichte zeigen
+					(Befehl <code>persp</code>) und	die 2. Grafik soll mit dem Befehl <code>contour</code>
+					(angewandt auf die Dichte) erstellt werden (versuchen sie, eine gute Perspektive zu finden).
+				</p>
+				<h4>Fragestellungen:</h4>
+				<ul>
+					<li>Welche der Geraden eignet sich ihrer Meinung nach für diesen Datensatz am besten (Begründung!)</li>
+					<li>Beschreiben sie kurz, wie diese (von ihnen gewählte) Gerade berechnet wird</li>
+				</ul>
+				<h4>R Hilfe:</h4>
+				<ul>
+					<li>Die LS-Regressionsgerade kann mit dem Befehl <code>lm</code> berechnet werden.</li>
+					<li>Die, je nach Aufgabenstellung, benötigte <code>mblm</code> Funktion ist im gleichnamigen Package (<code>install.packages("mblm")</code>) zu finden.</li>
+					<li>Die Gerade nach Theil kann mit dem Befehl <code>mblm(..., repeated=FALSE)</code> berechnet werden.</li>
+					<li>Die LTS Gerade kann mit dem Befehl <code>ltsReg vom Paket robustbase</code> berechnet werden.</li>
+					<li>Die berechneten Linien können mit dem Befehl <code>abline</code> zur Grafik hinzugefügt werden.</li>
+					<li>Eine 2-dimensionale Dichte kann mit dem Befehl <code>kde2d</code> aus dem Paket <code>MASS</code> geschätzt werden.
+					Die Befehle <code>persp</code> und <code>contour</code> können direkt mit der geschätzten Dichte umgehen.
+					Die Perspektive kann u.a mit den Paramtern <code>theta</code>, <code>phi</code> und <code>r</code> verändert werden.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+       <ul id="footer">
+                <li class="first">Technische Universität Wien</li>
+                <li>Institut für Stochastik und Wirtschaftsmathematik</li>
+                <li>1040 Wien, Wiedner Hauptstr. 8-10</li>
+                <li>AUSTRIA</li> 
+        </ul>      
+</body>
+</html>
