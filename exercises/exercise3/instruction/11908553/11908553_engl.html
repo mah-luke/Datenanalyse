@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" >
+<head>
+	<title>Data Analysis</title>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" href="instructions.css" />
+</head>
+<body>
+	<div class="header framed">
+		<h1>Third Exercise</h1>
+		<h3 class="subtitle">107.A03 Data Analysis (SS21)</h3>
+	</div>
+	<div class="framed">
+		<p><strong>Attention: These assignments are generated individually for every student!</strong></p>
+		<h2>Hints</h2>
+		<p>
+            The tasks and documentations need to be done with Rmarkdown. A template (.Rmd file) is available in TUWEL, 
+            together with the resulting .pdf file. You can load the Rmarkdown file in RStudio, and execute it with 
+            the button knitr. General instructions to Rmarkdown are also available in TUWEL.
+		</p>
+		<h2>Remark:</h2>
+		<p class="indent">
+			Please, make sure in your plots to visualize the whole data range, in x- as well as in y- direction!
+		</p>
+		<h2>Tasks</h2>
+		<h3 class="indent">Example 1: Multivariate graphics</h3>
+		<div class="indent">
+			<div class="problem1 indent">
+				<p>
+					Load the data from the file <strong>ice.RData</strong> (TUWEL) into R.
+					These data contain in the first 8 columns the fatty acid values measured in tissue samples of human mummies.
+					The column <code>code</code> classifies the observations into 6 groups, und the column <code>group</code>
+					provides a more detailed description of the objects. For instance, <em>iceman</em> is our good old Ötzi, <em>glac</em>
+					refers to corpses found on gaciers, and <em>fresh</em> refers to fresh tissue samples of recently deceased people (details in the book of Varmuza und Filzmoser, 2009).
+				</p>
+				<p>
+				Draw a segment and a star plot (<code>stars()</code>) of the first 8 columns of the <code>ice</code> data.
+					Use as graphics <code>labels</code> the names from the column <code>group</code> (this column can be
+					converted to character with the command <code>as.character</code>). Add a legend to the plot, and take care 
+					that the graphs, the labels and the legend are well visible.
+				</p>
+				<p>
+					Further, plot the first 8 columns of the <code>ice</code> data as parallel coordinates 
+					(function <code>parcoord</code> from package MASS), and use the column <code>code</code> to color
+					the lines. Try to change the sorting of the variables to better reveal the data structure.
+				</p>
+				<h4>Questions:</h4>
+				<ul>
+					<li>Which joint properties between the mummies can you see in the plot with the segments or stars,
+					and do these correspond to the column <code>group</code>? Is this better visible in the 
+					parallel coordinate plot?</li>
+				</ul>
+				<h4>R help:</h4>
+				<ul>
+					<li>The segment plot can be drawn with the command <code>stars</code> and the parameter
+						<code>draw.segments = TRUE</code>. A legend can be added with the parameter
+						<code>key.loc</code>.</li>
+					<li>A stars plot can be drawn with the same command as for segments, but the parameter
+					<code>draw.segments</code> needs to be set to <code>FALSE</code>.</li>
+				</ul>
+			</div>
+		</div>
+		<h3 class="indent">Example 2: Principal Component Analysis (PCA)</h3>
+		<div class="indent">
+			<div class="problem2 indent">
+				<p>Carry out a PCA for the data set 
+				<code>data(decathlon)</code> from the package <code>FactoMineR</code>.
+                Hereby use an individually generated data subset with the following instruction:
+                <code>decathlon[c("Rank", "Rank", "Points", "Javeline", "400m", "1500m", "Competition", "Shot.put", "Discus")]</code></p>
+				<p>Have also a look at the packages <code>caret</code> and <code>PCA</code>.
+				</p>
+				<h4>Questions:</h4>
+				<ul>
+					<li>Explain the idea of PCA, and explain briefly the mathematical background.</li>
+					<li>Why can a data transformation sometimes be of advantage?</li>
+					<li>Which kind of transformation would be appropriate?</li>
+					<li>How can you select an appropriate number of components a) graphically b) with R (R functions)?</li>
+				</ul>
+				<p>Perform PCA with an appropriate data transformation (if necessary), determine the number of 
+				components using a function (see last question), and visualize the results.</p>
+			</div>
+		</div>
+		<h3 class="indent">Example 3: Cluster analysis</h3>
+		<div class="indent">
+			<div class="problem3 indent">
+				<p>Describe briefly the goal of cluster analysis.</p>
+				<p>Mention at least 5 different clustering procesures, and describe 2 of them briefly.
+				    Refer also to the corresponding R functions. Explain also the meaning of distance measure in this context.</p>
+				<p>How can a meaningful and useful number of clusters be determined?</p>
+				<p>Carry out different cluster analysis methods for the data set <code>olive</code> from the 
+				package <code>pgmm</code>.
+				    The data are in your folder
+				    <strong>oliveSample_11908553.RData</strong>.
+				    Read these data into R (see R help of the first example).
+				    Visualize the data appropriately. For this purpose, you can get inspired by
+				    <a href="https://cran.r-project.org/web/packages/dendextend/vignettes/Cluster_Analysis.html">Inspiration Visualization</a>. Hereby, compare the clustering results to the true and correct groups similar as in
+				    <a href="http://www.rdatamining.com/examples/kmeans-clustering">Example Clustering</a>.
+				    Perform 3 different clustering procedures and compare the results. Argue why data points can be 
+				    assigned to different groups, depending on the procedure.</p>
+			</div>
+		</div>
+		<h3 class="indent">Example 4: Discriminant analysis</h3>
+		<div class="indent">
+			<div class="problem4 indent">
+				<p>Describe briefly the idea behind discriminant analysis, and how it works. Explain the difference 
+				to cluster analysis.</p>
+				<p>Hint: Use the package <code>MASS</code> and <code>car</code> for the following tasks.</p>
+				<p>This time we analyze the following data set: <a href="http://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data">Wine</a></p>
+				<p>Try to get an overview of these data with the function 
+				<code>scatterplotMatrix</code>.</p>
+				<p>Which R function can be used to obtain summary statistics for multivariate data?</p>
+				<p>Split the data set according to the proportions <code>70:30</code> into a training and a test set.
+				Carry out LDA for the following data subsets: 1)
+				    <code>wine[c("V1", "Proline", "Hue", "Ash")]</code>
+				    2) <code>wine[c("V1", "Alcalinity", "Alcalinity", "Nonflavanoid", "Phenols", "OD280", "Ash", "Flavanoids", "Intensity", "Hue")]</code>.</p>
+				<p>Make use of the function <code>predict</code> to predict the class memberships for the test data,
+				and compare the predictions with the true class memberships. Visualize the results.</p>
+			</div>
+		</div>
+		<h2>Submission of the results:</h2>
+		<p class="indent">
+			The solutions should be uploaded on <a href="#{ASSIGNMENT_UPLOAD}">TUWEL</a> as PDF or <strong>HTML directly from knitr</strong>, and it is due at latest until <strong>Deadline see TUWEL</strong>.
+		</p>
+		<h4 class="indent">The solutions should contain the following contents in a structured way:</h4>
+		<ul class="upload-desc indent">
+			<li>the graphics (in readable size)</li>
+			<li>axis legends of the graphics</li>
+			<li>answers to the questions</li>
+			<li>used assumptions (if appropriate) and necessary explanations (arguments)</li>
+			<li>the <strong>successful</strong> R commands.</li>
+		</ul>
+	</div>
+       <ul id="footer">
+                <li class="first">TU Wien</li>
+                <li>Institute of Statistics and Mathematical Methods in Econimics</li>
+                <li>1040 Wien, Wiedner Hauptstr. 8-10</li>
+                <li>AUSTRIA</li>
+        </ul>
+</body>
+</html>
