@@ -1,0 +1,73 @@
+---
+title: "Datenanalyse"
+subtitle: "Abgabe 3"
+author: "Lukas Mahler (Matr. Nr. 11908553)"
+date: "01.04.2021"
+output: pdf_document
+---
+
+##Vorinformation:
+
+Um dieses Dokument exekutieren zu k&ouml;nnen, muss zuerst R, R-Studio von
+https://www.rstudio.com/ und \LaTeX (z.B. f&uuml;r Windows als Miktex https://miktex.org/ und f&uuml;r Linux als TexLive https://www.tug.org/texlive/)
+installiert werden. Man ruft dann R-Studio auf, &ouml;ffnet diese Datei mit
+*File - Open File*, und dr&uuml;ckt den Knopf *Knit*. Dies erzeugt dann als
+Resultat dieses pdf-File.
+
+Vorallem auf Linux sollte man sich auch vergewissern, da&szlig; Pandoc installiert ist. 
+
+#Erste Frage
+
+Man soll 100 Zufallszahlen einer Standard-Normalverteilung erzeugen. Dies wird folgenderma&szlig;en durchgef&uuml;hrt:
+
+```{r, echo=FALSE}
+set.seed(123)
+```
+
+```{r, echo=TRUE}
+x <- rnorm(100)
+```
+
+Oben wurde auch ein *seed* gesetzt (siehe Quellcode in der .Rmd Datei), um immer die gleichen Zufallszahlen zu 
+erhalten (Reproduzierbarkeit).
+
+Einige wesentliche Kenngr&ouml;&szlig;en dieser Zufallszahlen werden hier dargestellt:
+
+```{r, echo=FALSE}
+summary(x)
+```
+
+Der R-Befehl daf&uuml;r ist:
+
+```{r, echo=TRUE, eval=FALSE}
+summary(x)
+```
+
+Das arithmetische Mittel hat somit den Wert `r mean(x)`, oder, besser gerundet
+auf 3 Komma-Stellen, `r round(mean(x),3)`, also auf 3 Komma-Stellen,
+`r format(mean(x),digits=2,nsmall=3)`.
+
+#Zweite Frage
+
+Von den oben erzeugten Zufallszahlen soll ein Histogramm angezeigt werden. Der
+R-code daf&uuml;r wird unten angezeigt, und der Plot ist in Abbildung \ref{fig:abb1}.
+
+```{r abb1, echo=TRUE, fig.cap="\\label{fig:abb1}Histogramm der erzeugten Daten",fig.width=6,fig.height=4}
+hist(x,main="")
+
+```
+
+Abbildung \ref{fig:abb2} zeigt noch weitere Histogramme dieser Daten, aber
+mit unterschiedlicher Anzahlen von Histogramm-Balken. Diese Darstellungen
+sind wohl nicht mehr ideal, um eine Idee &uuml;ber die zugrunde liegende Verteilung zu erhalten.
+
+
+```{r abb2, echo=TRUE, fig.cap="\\label{fig:abb2}Histogramm der erzeugten Daten mit unterschiedlicher Anzahl von Histogramm-Balken",fig.width=9,fig.height=4}
+par(mfrow=c(1,2))
+hist(x,main="Parameter breaks=20",breaks=20)
+hist(x,main="Parameter breaks=40",breaks=40)
+```
+
+
+
+</div></pre>
